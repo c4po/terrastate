@@ -10,23 +10,6 @@ on:
       - "v*.*.*"
 
 jobs:
-    # build:
-    #     name: Build TerraState
-    #     runs-on: ubuntu-latest
-
-    #     steps:
-    #         - name: Checkout
-    #           uses: actions/checkout@v4
-
-    #         - name: Install Go
-    #           uses: actions/setup-go@v4
-    #           with:
-    #             go-version: 1.23
-
-    #         - name: Build
-    #           run: |
-                
-
 
     build-docker:
         name: Build Docker
@@ -81,4 +64,5 @@ jobs:
                 labels: ${{ steps.meta.outputs.labels }}
                 build-args: |
                     VERSION=${{ steps.meta.outputs.version }}
-                    GIT_SHA=${{ github.sha }}
+                    GIT_SHA=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}
+                    BUILD_TIME=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
