@@ -44,8 +44,7 @@ jobs:
                     ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.DOCKER_IMAGE }}
                 tags: |
                     type=schedule
-                    type=ref,event=branch
-                    type=ref,event=pr
+                    type=sha,prefix={{branch}}-
                     type=semver,pattern={{version}}
                     type=semver,pattern={{major}}.{{minor}}
                     type=semver,pattern={{major}}
