@@ -17,8 +17,9 @@ import (
 )
 
 var (
-	Version string = "dev"
-	GitSha  string = "unknown"
+	Version   string = "dev"
+	GitSha    string = "unknown"
+	BuildTime string = "unknown"
 )
 
 func initializeStorage() (storage.StateStorage, error) {
@@ -54,8 +55,9 @@ func initializeStorage() (storage.StateStorage, error) {
 
 func versionHandler(w http.ResponseWriter, r *http.Request) {
 	versionInfo := map[string]string{
-		"version": Version,
-		"git_sha": GitSha,
+		"version":    Version,
+		"git_sha":    GitSha,
+		"build_time": BuildTime,
 	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(versionInfo)
