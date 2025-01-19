@@ -27,7 +27,7 @@ RUN go mod download
 COPY . .
 
 # Build the application with versioning information
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-X main.Version=${VERSION} -X main.GitSHA=${GIT_SHA} -X main.BuildTime=${BUILD_TIME}" -o terraform-state-backend ./cmd/server
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-X main.Version=${VERSION} -X main.GitSha=${GIT_SHA} -X main.BuildTime=${BUILD_TIME}" -o terraform-state-backend ./cmd/server
 
 # Final stage
 FROM alpine:3.19
