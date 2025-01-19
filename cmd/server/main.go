@@ -27,6 +27,7 @@ func initializeStorage() (storage.StateStorage, error) {
 
 	switch storageType {
 	case "s3":
+		log.Println("Using S3 storage")
 		bucketName := os.Getenv("S3_BUCKET_NAME")
 		if bucketName == "" {
 			log.Fatal("S3_BUCKET_NAME environment variable is required for S3 storage")
@@ -38,9 +39,11 @@ func initializeStorage() (storage.StateStorage, error) {
 		}
 
 		s3Client := s3.NewFromConfig(cfg)
+		log.Println("S3 client initialized, connecting to bucket", bucketName)
 		return s3storage.NewS3Storage(s3Client, bucketName), nil
 
 	case "local":
+		log.Println("Using local storage")
 		basePath := os.Getenv("STORAGE_PATH")
 		if basePath == "" {
 			basePath = "data"
