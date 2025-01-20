@@ -24,3 +24,12 @@ type StateLock struct {
 	Created   time.Time `json:"created"`
 	Path      string    `json:"path"`
 }
+
+type TokenResponse struct {
+	Token string `json:"token"`
+}
+
+type TokenRequest struct {
+	Code      string
+	CreatedAt time.Time
+}
