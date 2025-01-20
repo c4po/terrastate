@@ -76,12 +76,17 @@ func main() {
 	// Initialize handlers
 	stateHandler := handlers.NewStateHandler(storage)
 	discoveryHandler := handlers.NewDiscoveryHandler()
+	loginHandler := handlers.NewLoginHandler()
 
 	// Setup router
 	r := mux.NewRouter()
 
 	// Discovery endpoint
 	r.HandleFunc("/.well-known/terraform.json", discoveryHandler.GetDiscovery).Methods("GET")
+
+	r.HandleFunc("/login", loginHandler.TerraformLogin).Methods("GET")
+	r.HandleFunc("/app/settings/tokens", loginHandler.Tokens).Methods("GET")
+	r.HandleFunc("/app/settings/tokens/create", loginHandler.CreateToken).Methods("POST")
 
 	// State endpoints
 	r.HandleFunc("/state/{workspace}/{id}", stateHandler.GetState).Methods("GET")
