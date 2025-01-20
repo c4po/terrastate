@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 	"time"
 
@@ -28,6 +29,8 @@ func (h *LoginHandler) TerraformLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Printf("Generated code: %s", code)
+
 	pendingTokens[code] = &models.TokenRequest{
 		Code:      code,
 		CreatedAt: time.Now(),
@@ -40,6 +43,11 @@ func (h *LoginHandler) TerraformLogin(w http.ResponseWriter, r *http.Request) {
 
 func (h *LoginHandler) Tokens(w http.ResponseWriter, r *http.Request) {
 	code := r.URL.Query().Get("code")
+	// If the code is empty, redirect to the /login page
+	if code == "" {
+		http.Redirect(w, r, "/login", http.StatusFound)
+		return
+	}
 
 	data := struct {
 		Code  string
@@ -59,6 +67,7 @@ func (h *LoginHandler) Tokens(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *LoginHandler) CreateToken(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Creating token")
 	if r.Method != "POST" {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return

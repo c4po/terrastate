@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
@@ -66,6 +67,23 @@ func versionHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(versionInfo)
 }
 
+// Logging Middleware to log each HTTP request method and details
+func loggingMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		startTime := time.Now()
+
+		// Log Request Details
+		log.Printf("[DEBUG] %s %s %s", r.Method, r.RequestURI, r.RemoteAddr)
+
+		// Call the next handler
+		next.ServeHTTP(w, r)
+
+		// Log Response Time
+		duration := time.Since(startTime)
+		log.Printf("[DEBUG] Completed in %v", duration)
+	})
+}
+
 func main() {
 	// Initialize storage backend
 	storage, err := initializeStorage()
@@ -80,6 +98,9 @@ func main() {
 
 	// Setup router
 	r := mux.NewRouter()
+
+	// Logging middleware
+	r.Use(loggingMiddleware)
 
 	// Discovery endpoint
 	r.HandleFunc("/.well-known/terraform.json", discoveryHandler.GetDiscovery).Methods("GET")
